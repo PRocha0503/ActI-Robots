@@ -250,10 +250,10 @@ MonoBehaviour:
   floor: {fileID: 1871228683}
   wallPrefab: {fileID: 2068272345172958045, guid: 239c18949382339279005eae01166255, type: 3}
   camara: {fileID: 963194225}
-  numberOfBoxes: 15
+  numberOfBoxes: 20
   width: 20
   height: 20
-  timeToUpdate: 1
+  timeToUpdate: 0.1
   timer: 0
   dt: 0
 --- !u!4 &932439617
