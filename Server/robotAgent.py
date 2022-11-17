@@ -173,12 +173,10 @@ class RobotAgent(Agent):
             if isinstance(a,BoxAgent):
                 return a.collected
         return False
-
     def printMap(self):
         for i in range(len(self.map[0])):
             print(self.map[i])
         print("=====================================")
-    
     def joinMaps(self,otherAgent):
         for i in range(len(self.map)):
             for j in range(len(self.map[0])):
@@ -194,8 +192,6 @@ class RobotAgent(Agent):
                     otherAgent.map[i][j] = "E"
                 elif self.map[i][j] != "E" and otherAgent.map[i][j] == "E":
                     self.map[i][j] = "E"
-
-    
     def knownBox(self):
         for i in range(len(self.map)):
             for j in range(len(self.map[0])):
@@ -211,8 +207,7 @@ class RobotAgent(Agent):
                     return pos
         return False
     def getDistance(self,x,y,x2,y2):
-        return math.sqrt(math.pow((x-x2),2)+math.pow((y-y2),2))
-    
+        return math.sqrt(math.pow((x-x2),2)+math.pow((y-y2),2)) 
     def goTo(self,pos):
         x,y = pos
         possible_steps = self.model.grid.get_neighborhood(
