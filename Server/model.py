@@ -34,6 +34,8 @@ class RobotModel(Model):
         #Run the model
         self.running = True
 
+    
+
         #Stack Location
         self.setDropLocation()
 
@@ -81,6 +83,7 @@ class RobotModel(Model):
             self.grid.place_agent(robot, cords)
             #Add the robot agent to the schedule
             self.schedule.add(robot)
+
     def newDropLocation(self):
         if self.numberOfBoxesCollected % 5 == 0 and self.numberOfBoxesCollected != 0:
             x,y = self.dropLocation
@@ -103,7 +106,7 @@ class RobotModel(Model):
         input: none
         output: boxes
         """
-        return [{"x":box.pos[0],"y":0,"z":box.pos[1]} for box in self.schedule.agents if type(box) is BoxAgent]
+        return [{"x":box.pos[0],"y":box.y,"z":box.pos[1]} for box in self.schedule.agents if type(box) is BoxAgent]
             
     def step(self):
         """
@@ -116,7 +119,7 @@ class RobotModel(Model):
         #Advance the frame
         self.currentFrame += 1
         #Check if the max frames have been reached
-        if self.currentFrame >= self.maxFrames:
+        if self.currentFrame >= self.maxFrames or self.numberOfBoxesCollected == self.numberOfBoxes:
             #Stop the model
             self.running = False
         

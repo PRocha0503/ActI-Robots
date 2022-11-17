@@ -16,6 +16,7 @@ class BoxAgent(Agent):
         """
         super().__init__(unique_id, model)
         self.collected = False
+        self.y=0
     def step(self):
         """
         Step function
