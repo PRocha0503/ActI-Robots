@@ -19,11 +19,14 @@ class RobotAgent(Agent):
         self.box = None
         #Map with unknown values
         self.map = [["W" for i in range(self.model.grid.height)] for j in range(self.model.grid.width)]
+        self.last = None
 
     def moveAgent(self,pos):
+        self.last = self.pos
         self.model.grid.move_agent(self, pos)
     
     def moveWithBox(self,pos):
+        self.last = self.pos
         self.model.grid.move_agent(self, pos)
         self.model.grid.move_agent(self.box, pos)
 
@@ -38,6 +41,14 @@ class RobotAgent(Agent):
             return
         else:
             self.searchForBox()
+
+    def dontGoBack(self,map, dist):
+        if self.last:
+            for d in dist:
+                if map[d] == self.last:
+                    dist.remove(d)
+                else:
+                    return
     
     def moveHome(self):
         """
@@ -45,6 +56,7 @@ class RobotAgent(Agent):
         input:none
         output:none
         """
+
         xHome,yHome = self.model.dropLocation
         x,y = self.pos
         #Get adj cells
@@ -59,6 +71,8 @@ class RobotAgent(Agent):
         
         dist = []
         distMap = {}
+
+        
         
         for step in possible_steps:
             _x,_y = step
@@ -73,15 +87,14 @@ class RobotAgent(Agent):
                     elif isinstance(a,RobotAgent):
                         self.joinMaps(a)
         dist.sort()
-
+        self.dontGoBack(distMap,dist)
         if abs(xHome-x) == 1 and abs(yHome-y) == 0 or abs(xHome-x) == 0 and abs(yHome-y) == 1 :
             self.model.grid.move_agent(self.box, self.model.dropLocation)
             self.box.collected = True
+            self.box.y = self.model.numberOfBoxesCollected % 5 * 0.5
             self.model.numberOfBoxesCollected += 1
-            self.box.y = self.model.numberOfBoxesCollected%5 * 1
             self.model.newDropLocation()
             self.box = None
-
         elif len(dist) >0 :
             self.moveWithBox(distMap[dist[0]])
     
@@ -120,12 +133,12 @@ class RobotAgent(Agent):
             else:
                 self.map[pos[0]][pos[1]] = "E"
             
-            if boxPos:
-                self.goTo(boxPos)
-                return
-            elif unknownPos:
-                self.goTo(unknownPos)
-                return
+        if boxPos:
+            self.goTo(boxPos)
+            return
+        elif unknownPos:
+            self.goTo(unknownPos)
+            return
 
         
         freeSpaces=list(map(lambda x: x not in occ, possible_steps))
@@ -141,8 +154,8 @@ class RobotAgent(Agent):
         output: none
         """
         self.model.grid.move_agent(box, self.pos)
-        box.y = 0.3
         self.box = box
+        self.box.y = 0.3
 
     def step(self):
         """
@@ -165,9 +178,8 @@ class RobotAgent(Agent):
                 except:
                     continue
             if isinstance(a,type):
-                return True
+                return a.pos
         return False
-    
     def collectedBox(self,agents):
         for a in agents:
             if isinstance(a,BoxAgent):
@@ -221,13 +233,15 @@ class RobotAgent(Agent):
         
         dist = []
         distMap = {}
-        
+        self.dontGoBack(distMap,dist)
+        fallback = []
         for step in possible_steps:
             _x,_y = step
-            if not  isSomeOneThere(_x,_y):
+            if not isSomeOneThere(_x,_y):
                 d = self.getDistance(x,y,_x,_y)
                 dist.append(d)
                 distMap[d] = _x,_y
+                fallback = _x,_y
             else:
                 for a in isSomeOneThere(_x,_y):
                     if isinstance(a,BoxAgent) and a.collected==False:
@@ -237,3 +251,5 @@ class RobotAgent(Agent):
         dist.sort()
         if len(dist) != 0:
             self.moveAgent(distMap[dist[0]])
+        elif fallback:
+            self.moveAgent(fallback)
