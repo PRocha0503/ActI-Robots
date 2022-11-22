@@ -91,8 +91,8 @@ class RobotAgent(Agent):
         if abs(xHome-x) == 1 and abs(yHome-y) == 0 or abs(xHome-x) == 0 and abs(yHome-y) == 1 :
             self.model.grid.move_agent(self.box, self.model.dropLocation)
             self.box.collected = True
+            self.box.y = self.model.numberOfBoxesCollected % 5 * 0.5
             self.model.numberOfBoxesCollected += 1
-            self.box.y = self.model.numberOfBoxesCollected%5 * 0.5
             self.model.newDropLocation()
             self.box = None
         elif len(dist) >0 :
