@@ -78,7 +78,7 @@ class RobotAgent(Agent):
             self.model.grid.move_agent(self.box, self.model.dropLocation)
             self.box.collected = True
             self.model.numberOfBoxesCollected += 1
-            self.box.y = self.model.numberOfBoxesCollected%5 * 1
+            self.box.y = self.model.numberOfBoxesCollected%5 * 0.5
             self.model.newDropLocation()
             self.box = None
 
@@ -141,7 +141,6 @@ class RobotAgent(Agent):
         output: none
         """
         self.model.grid.move_agent(box, self.pos)
-        box.y = 0.3
         self.box = box
 
     def step(self):
