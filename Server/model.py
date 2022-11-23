@@ -33,6 +33,8 @@ class RobotModel(Model):
         self.numberOfBoxesCollected = 0
         #Run the model
         self.running = True
+        #Robots steps
+        self.robotSteps = 0
 
     
 
@@ -120,6 +122,10 @@ class RobotModel(Model):
         self.currentFrame += 1
         #Check if the max frames have been reached
         if self.currentFrame >= self.maxFrames or self.numberOfBoxesCollected == self.numberOfBoxes:
+            print(f"Frames reached: {self.maxFrames}")
+            print(f"Boxes collected: {self.numberOfBoxesCollected}")
+            print(f"Boxes left: {self.numberOfBoxes - self.numberOfBoxesCollected}")
+            print(f"Number of steps taken by robots: {self.robotSteps}")
             #Stop the model
             self.running = False
         

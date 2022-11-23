@@ -24,6 +24,7 @@ class RobotAgent(Agent):
     def moveAgent(self,pos):
         self.last = self.pos
         self.model.grid.move_agent(self, pos)
+        self.model.robotSteps+=1
     
     def moveWithBox(self,pos):
         self.last = self.pos
